@@ -1,0 +1,15 @@
+# Variables de entorno
+.env
+.env.*
+
+# Permitir el archivo de ejemplo
+!.env.example
+
+# Dependencias
+/node_modules/
+/vendor/
+
+# Archivos temporales
+*.log
+.DS_Store
+Thumbs.db
