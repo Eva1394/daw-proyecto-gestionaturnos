@@ -1,48 +1,70 @@
 
 
-<h2>Indice</h2>
-
-1. Justificación y dominio funcional 
-  - 1.1. Elevator pitch (100–150 palabras) 
-  - 1.2. Público objetivo y contexto de uso 
-  
-2. Roles del sistema y casos de uso 
-  - 2.1. Matriz de roles (RBAC) 
-  - 2.2. Casos de uso principales
-  - 2.3. Alcance del MVP (Hito 3, diciembre) 
-  
-3. Entidades de negocio tentativas
-  
-4. Stack tecnológico previsto 
-
-5. Selección tentativa de Add-ons
 
 
 
 
 
-<h1>Hito 1 Anteproyecto: GestionaTurnos</h1>
+
+<div style="text-align: center;">
+
+**CENTRO INTEGRADO DE FORMACIÓN PROFESIONAL AVILÉS**
+
+**FAMILIA PROFESIONAL DE INFORMÁTICA Y COMUNICACIONES**
+
+Ciclo Formativo de Grado Superior en Desarrollo de Aplicaciones Web
+
+Modalidad Virtual · Curso 2026/2027
+
+Proyecto Intermodular (0379 · PIDW2)
+
+<h1>GESTIONATURNOS</h1>
+
+**Aplicación web para la gestión de turnos de supermercado**
+
+**Hito 1: Anteproyecto funcional y entorno Git**
+
+</div>
 
 ---
 
-**Centro:** CIFP Avilés (Curso 2026/2027)  
+**Alumna:** Eva Rodríguez Pérez
 
-**Módulo:** Proyecto Intermodular (0379 · PIDW2) — 2º DAW Virtual 
+**Profesor tutor:** Pablo Lera Menéndez
 
-**Autor/a:** Eva Rodríguez Pérez 
+**Repositorio GitHub:** https://github.com/Eva1394/daw-proyecto-gestionaturnos
 
-**Tutor/a:** Pablo Lera Menéndez
+**Tablero GitHub Projects:** https://github.com/users/Eva1394/projects/1
 
-**Repositorio GitHub:** [Entregar en el Hito 1]
+<div style="page-break-before: always;"></div>
 
-**Tablero GitHub Projects:**[Entregar en el Hito 1]
+## Índice
 
- 
+1. Justificación y dominio funcional .......... 3
 
+   1.1. Elevator pitch ........................ 3
+
+   1.2. Público objetivo y contexto de uso ..... 3
+
+2. Roles del sistema y casos de uso ............ 4
+
+   2.1. Matriz de roles (RBAC) ................. 4
+
+   2.2. Casos de uso principales ............... 5
+
+   2.3. Alcance del MVP (Hito 3, diciembre) .... 8
+
+3. Entidades de negocio tentativas ............. 9
+
+4. Stack tecnológico previsto ................. 10
+
+5. Selección tentativa de Add-ons .............. 10
+
+<div style="page-break-before: always;"></div>
 
 ## 1. Justificación y dominio funcional ###  
 ---
-### 1.1. Elevator pitch (100–150 palabras) 
+### 1.1. Elevator pitch 
 
 GestionaTurnos es una aplicación web para facilitar la organización de los turnos de trabajo en los supermercados. 
 
@@ -70,7 +92,7 @@ De esta manera, las encargadas podrán dedicar menos tiempo a esta labor y solo 
  ## 2. Roles del sistema y casos de uso ###  
  ---
 
-### 2.1. Matriz de roles (RBAC) -  
+### 2.1. Matriz de roles (RBAC) 
 
 
 | Caso de uso | Público | Usuario registrado | Administrador |
@@ -100,9 +122,9 @@ De esta manera, las encargadas podrán dedicar menos tiempo a esta labor y solo 
 
 **Público / invitado:** En este caso no se dispone de público/invitado, ya que esta aplicación solo está destinada a empleados y encargados de la empresa. Las personas que no hayan sido registradas solo podrán acceder a la pantalla de inicio de sesión. 
 
-### 2.2. Casos de uso principales (mínimo 6) 
+### 2.2. Casos de uso principales  
 
- 1. **CU-01: Registro e inicio de sesión seguro con tokens JWT. **
+ 1. **CU-01: Registro e inicio de sesión seguro con tokens JWT.**
 
 Las encargadas crearán las cuentas de los empleados para que puedan acceder a la aplicación. Tanto las encargadas como los empleados podrán iniciar sesión de una forma segura. 
 
@@ -114,10 +136,11 @@ Las encargadas crearán las cuentas de los empleados para que puedan acceder a l
 - El sistema comprueba que las credenciales son correctas.
 - Si son correctas, permite acceder a la aplicación según el rol del usuario.
 
-*Flujo alternativo: *
--Si las credenciales son incorrectas, el sistema muestra un mensaje de error y no permite el acceso.
+*Flujo alternativo:*
 
- 2. **CU-02:** Gestión de empleados 
+- Si las credenciales son incorrectas, el sistema muestra un mensaje de error y no permite el acceso.
+
+ 2. **CU-02: Gestión de empleados**
 
 Las encargadas podrán añadir, modificar y eliminar empleados. También podrán indicar las secciones habituales de cada empleado y las que pueden cubrir, así como el tipo de jornada (completa o parcial) o el turno que tienen (fijo o rotativo). 
 
@@ -128,79 +151,80 @@ Las encargadas podrán añadir, modificar y eliminar empleados. También podrán
 - El sistema comprueba los datos introducidos y guarda al empleado.
 - La encargada también podrá seleccionar un empleado existente para modificar sus datos o eliminarlo.
 
-*Flujo alternativo: *
+*Flujo alternativo:*
 - Si falta algún dato obligatorio o es incorrecto, el sistema muestra un mensaje de error para que pueda corregirse.
 - Si la encargada decide eliminar un empleado, el sistema solicita una confirmación antes de hacerlo.
 
-3. **CU-03:** Gestión de secciones 
+3. **CU-03: Gestión de secciones** 
+
 Las encargadas indicarán el número de personas necesarias para cada sección tanto en turno de tarde como de mañana. 
 
-*Flujo principal: *
+*Flujo principal:*
 - La encargada inicia sesión y accede a las secciones.
 - Selecciona la sección a la que desea acceder.
 - Indica el número de empleados necesarios para cada turno.
 - El sistema comprueba los datos introducidos y guarda la configuración.
 
-*Flujo alternativo: *
+*Flujo alternativo:*
 - Si se introduce un número de trabajadores incorrecto, como puede ser un número negativo, el sistema muestra un mensaje de error para que pueda corregirse.
 
- 4. **CU-04:** Gestión de vacaciones y bajas 
+ 4. **CU-04: Gestión de vacaciones y bajas** 
 
 Las encargadas indicarán las vacaciones y bajas de cada empleado teniendo en cuenta que en ese período no estarán disponibles para trabajar. 
 
-*Flujo principal: *
+*Flujo principal:*
 - La encargada inicia sesión y accede al apartado de vacaciones y bajas.
 - Selecciona al empleado.
 - Indica el motivo de ausencia y las fechas de inicio y fin de la misma.
 - El sistema comprueba los datos introducidos y guarda la ausencia.
 - El empleado no estará disponible durante esas fechas para la generación automática de cuadrantes.
 
-*Flujo alternativo: *
+*Flujo alternativo:*
 - Si las fechas son incorrectas, el sistema muestra un mensaje de error.
 - Si la encargada necesita modificar una ausencia, podrá seleccionarla y modificarla.
 
-5. **CU-05:** Generación automatica de cuadrantes 
+5. **CU-05: Generación automática de cuadrantes** 
 
-La aplicación generará automáticamente los cuadrantes de la semana teniendo en cuenta los turnos de los empleados, las vacaciones, las bajas y las necesidades de cada sección. También tendrá en cuenta las otras secciones que puede cubrir cada empleado para mantener todas las secciones cubiertas. 
+La aplicación generará automáticamente los cuadrantes de la semana teniendo en cuenta los turnos de los empleados, las vacaciones, las bajas y las necesidades de cada sección. En futuras versiones, también se tendrán en cuenta las otras secciones que puede cubrir cada empleado para mejorar la distribución del personal.
 
-*Flujo principal: *
+*Flujo principal:*
 - La encargada inicia sesión y accede al apartado de generación de cuadrantes.
 - Selecciona la semana para la que quiere generar el cuadrante.
 - El sistema consulta los empleados disponibles, sus turnos, las ausencias registradas y las necesidades de cada sección.
 - La aplicación distribuye a los empleados entre los turnos de mañana y tarde.
 - El sistema muestra el cuadrante generado para que la encargada pueda revisarlo.
 
-*Flujo alternativo: *
-- Si no hay suficientes empleados disponibles para cubrir una sección, el sistema muestra un aviso indicando donde falta el personal.
+*Flujo alternativo:*
+- Si no hay suficientes empleados disponibles para cubrir una sección, el sistema muestra un aviso indicando dónde falta el personal.
 - Si la encargada no está conforme con alguna asignación, podrá modificarla manualmente.
 
-6. **CU-06:** Revisión y modificación de cuadrantes 
+6. **CU-06: Revisión y modificación de cuadrantes**
 
 Las encargadas podrán revisar los cuadrantes generados por la aplicación para asegurarse de que todas las secciones estén totalmente cubiertas y modificarlos si lo consideran necesario. 
 
-*Flujo principal: *
+*Flujo principal:*
 - La encargada inicia sesión y accede al apartado de cuadrantes.
 - Selecciona el cuadrante que desea revisar.
 - El sistema muestra los empleados asignados a cada sección y turno.
 - La encargada comprueba que las secciones estén cubiertas y, si es necesario, modifica las asignaciones.
 - El sistema guarda los cambios y actualiza el cuadrante.
 
-*Flujo alternativo: *
+*Flujo alternativo:*
 - Si la encargada intenta asignar a un empleado que está de vacaciones o de baja, el sistema muestra un aviso.
 - Si alguna sección queda sin el personal necesario después de realizar una modificación, el sistema muestra un aviso para poder corregirlo.
 
-7. **CU-07:** Consulta de horarios de trabajo 
+7. **CU-07: Consulta de horarios de trabajo** 
 
 Los empleados podrán iniciar sesión y consultar sus horarios de trabajo desde cualquier lugar. 
 
-*Flujo principal: *
+*Flujo principal:*
 - El empleado inicia sesión en la aplicación.
 - Accede al apartado de consulta de horarios.
 - El sistema muestra el cuadrante correspondiente al empleado, indicando los días y turnos asignados.
 - El empleado podrá consultar sus horarios de las semanas disponibles en la aplicación.
 
-*Flujo alternativo: *
-- Si el cuadrante no esta disponible todavía, el sistema mostrará un mensaje.
+*Flujo alternativo:*
+- Si el cuadrante no está disponible todavía, el sistema mostrará un mensaje.
 - Si el empleado intenta consultar un cuadrante al que no tiene permiso de acceso, el sistema deniega la consulta.
 
  ### 2.3. Alcance del MVP (Hito 3, diciembre) 
@@ -230,23 +254,25 @@ El MVP estará centrado en conseguir que las encargadas puedan introducir los da
 
 --- 
 **Entidades principales**
+
 *Empleado:* almacena los datos de los trabajadores, su disponibilidad y su sección habitual.
 
-*Sección: * almacena las distintas secciones del supermercado.
+*Sección:* almacena las distintas secciones del supermercado.
 
 *Horario:* almacena los turnos de mañana y tarde.
 
-*Configuracion:* almacena el número mínimo y máximo de trabajadores necesarios en cada sección y turno.
+*Configuración:* almacena el número mínimo y máximo de trabajadores necesarios en cada sección y turno.
 
-*Ausencia: * almacena las vacaciones y bajas de los empleados.
+*Ausencia:* almacena las vacaciones y bajas de los empleados.
 
-*Cuadrante: * almacena la planificación semanal de los turnos de trabajo
+*Cuadrante:* almacena la planificación semanal de los turnos de trabajo
 
-*Asignacion:* almacena qué empleado trabaja cada día y en qué sección y en qué horario.  
+*Asignación:* almacena qué empleado trabaja cada día y en qué sección y en qué horario.  
 
-*Usuario: * almacena los datos de acceso a la aplicacion y el rol correspondiente. Estará separado de los datos laborales del empleado.
+*Usuario:* almacena los datos de acceso a la aplicación y el rol correspondiente. Estará separado de los datos laborales del empleado.
 
-**Relación transaccional principal prevista **
+**Relación transaccional principal prevista**
+
 *Empleado-Horario:* Un empleado puede trabajar en distintos horarios y un mismo horario puede ser asignado a varios empleados. La entidad intermedia Asignación permite registrar qué empleado trabaja cada día, en qué turno y en qué sección, dentro de un cuadrante semanal.
  
 
@@ -273,14 +299,15 @@ Se ha elegido este gestor porque permite guardar y relacionar los datos de los e
 <u>AWS: </u>Ofrece servicios de alojamiento en la nube que permitirán publicar GestionaTurnos para así poder acceder a la aplicación desde internet. Además, se estudiará durante el curso, por lo que se podrán aplicar los conocimientos adquiridos.
 
 ---
-## 5. Selección tentativa de Add-ons (mínimo 2)  
+## 5. Selección tentativa de Add-ons 
 ---
 
-- Generación de informes en PDF/Excel en backend (+0.5)  
+- Generación de informes en PDF/Excel en backend  
 Con esta función se podrán descargar los cuadrantes de trabajo en PDF o Excel para que se puedan guardar o imprimir.
 
-- Batería de pruebas automatizadas (>40 % de endpoints) (+1.0) 
+- Batería de pruebas automatizadas (>40 % de endpoints)  
 Se realizarán pruebas automatizadas para comprobar que el backend funciona correctamente, lo que ayudará a detectar errores en la aplicación.
 
-- Documentación OpenAPI / Swagger interactiva (+0.5) 
+- Documentación OpenAPI / Swagger interactiva 
+
 Permitirá documentar las diferentes funciones de la API, además de probar las peticiones de forma sencilla y comprobar sus respuestas.
