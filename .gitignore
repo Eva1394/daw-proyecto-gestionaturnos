@@ -13,3 +13,11 @@
 *.log
 .DS_Store
 Thumbs.db
+
+# Archivos de compilación
+dist/
+build/
+
+# Configuración de los editores
+.idea/
+.vscode/
