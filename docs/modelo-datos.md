@@ -122,3 +122,87 @@ Registra qué empleado trabaja cada día, el turno y la sección a la que está 
 | fecha | DATE | Día concreto de trabajo. |
 | horas | DECIMAL(4,2) | Número de horas de trabajo correspondientes a la asignación. |
 | estado | ENUM('prevista', 'confirmada', 'cancelada') | Estado de la asignación. |
+
+
+## 3. Relaciones entre entidades
+
+### Usuario - Empleado (1:1)
+Un usuario puede estar asociado a un empleado, pero esta relación es opcional para los administradores que no tengan ficha laboral. Cada empleado puede tener como máximo una cuenta de usuario.
+
+### Sección - Empleado (1:N)
+Una sección puede tener varios empleados asociados. Cada empleado tiene una sección habitual.
+
+### Sección - Configuración (1:N)
+Una sección puede tener distintas configuraciones según el horario.
+
+### Horario - Configuración (1:N)
+Un horario puede tener distintas configuraciones según la sección.
+
+### Empleado - Ausencia (1:N)
+Un empleado puede registrar varias ausencias. Cada ausencia pertenece a un único empleado.
+
+### Usuario - Cuadrante (1:N)
+Un usuario administrador puede crear varios cuadrantes. Cada cuadrante tiene un usuario creador.
+
+### Cuadrante - Asignación (1:N)
+Un cuadrante contiene varias asignaciones. Cada asignación pertenece a un único cuadrante.
+
+### Empleado - Asignación (1:N)
+Un empleado puede tener varias asignaciones de trabajo. Cada asignación corresponde a un único empleado.
+
+### Horario - Asignación (1:N)
+Un horario puede aparecer en varias asignaciones. Cada asignación utiliza un único horario.
+
+### Sección - Asignación (1:N)
+Una sección puede aparecer en varias asignaciones. Cada asignación corresponde a una única sección.
+
+### Empleado - Horario (M:N)
+Un empleado puede trabajar en distintos horarios y un mismo horario puede corresponder a varios empleados. Esta relación se resuelve mediante la entidad Asignación, que almacena además la fecha, la sección, las horas de trabajo y el estado.
+
+
+## 4. Restricciones de integridad
+
+Para garantizar la coherencia de los datos, se establecen las siguientes restricciones:
+
+- **Claves primarias (PK):** todas las entidades tienen un campo `id` único y obligatorio.
+- **Claves foráneas (FK):** permiten relacionar las entidades y evitan referencias a registros inexistentes.
+- **Usuario:** el correo electrónico debe ser único. El campo `empleado_id` puede ser nulo, pero, cuando tenga un valor, este debe ser único.
+- **Sección:** el nombre de cada sección debe ser único.
+- **Configuración:** no puede existir más de una configuración para la misma combinación de sección y horario. El mínimo de empleados no puede ser negativo y el máximo debe ser igual o superior al mínimo.
+- **Ausencia:** la fecha de finalización debe ser igual o posterior a la fecha de inicio.
+- **Cuadrante:** la fecha de finalización debe ser igual o posterior a la fecha de inicio. No pueden existir dos cuadrantes para la misma semana.
+- **Asignación:** las horas de trabajo deben ser mayores que cero. No se pueden duplicar asignaciones para el mismo empleado, fecha y horario dentro de un cuadrante.
+
+
+## 5. Normalización de la base de datos
+
+El modelo de datos de GestionaTurnos se ha diseñado siguiendo las tres primeras formas normales para evitar duplicidades y mantener la coherencia de la información.
+
+### Primera forma normal (1FN)
+
+Todas las tablas tienen una clave primaria que identifica cada registro de forma única.
+
+Los campos almacenan valores individuales y no existen grupos de datos repetidos dentro de una misma columna.
+
+Por ejemplo, las ausencias de un empleado se almacenan en registros independientes de la tabla Ausencia, en lugar de guardar varias fechas en un único campo de Empleado.
+
+### Segunda forma normal (2FN)
+
+El modelo cumple la primera forma normal y los atributos de cada tabla dependen de su clave primaria completa.
+
+Todas las entidades utilizan una clave primaria simple (`id`), por lo que no existen dependencias parciales de una clave primaria compuesta.
+
+Por ejemplo, en Asignación, los campos fecha, horas y estado corresponden a una asignación concreta.
+
+### Tercera forma normal (3FN)
+
+El modelo cumple la segunda forma normal y evita almacenar atributos que dependan de otros atributos no clave.
+
+La información se distribuye entre entidades relacionadas mediante claves foráneas.
+
+Por ejemplo, Asignación almacena `seccion_id` en lugar de repetir el nombre de la sección. Del mismo modo, Empleado almacena `seccion_id` para identificar su sección habitual.
+
+Esto permite modificar el nombre de una sección una sola vez, sin tener que actualizar todos los empleados o las asignaciones relacionados.
+
+La entidad Configuración almacena las necesidades de personal de cada combinación de sección y horario, evitando repetir estos datos en cada asignación.
+
