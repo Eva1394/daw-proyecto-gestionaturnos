@@ -1,15 +1,30 @@
+
 # Variables de entorno
 .env
 .env.*
-
-# Permitir el archivo de ejemplo
 !.env.example
 
 # Dependencias
-/node_modules/
-/vendor/
+node_modules/
+vendor/
+
+# Carpetas de compilación
+dist/
+build/
+
+# Configuración de editores
+.idea/
+.vscode/
 
 # Archivos temporales
 *.log
 .DS_Store
 Thumbs.db
+
+# Archivos generados por Laravel
+/backend/bootstrap/cache/*.php
+/backend/storage/framework/cache/data/*
+/backend/storage/framework/sessions/*
+/backend/storage/framework/views/*
+/backend/storage/logs/*
+
