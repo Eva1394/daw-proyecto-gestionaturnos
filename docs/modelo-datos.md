@@ -164,9 +164,9 @@ Un empleado puede trabajar en distintos horarios y un mismo horario puede corres
 
 Para garantizar la coherencia de los datos, se establecen las siguientes restricciones:
 
-- **Claves primarias (PK):** todas las entidades tienen un campo `id` único y obligatorio.
+- **Claves primarias (PK):** todas las entidades tienen un campo **id** único y obligatorio.
 - **Claves foráneas (FK):** permiten relacionar las entidades y evitan referencias a registros inexistentes.
-- **Usuario:** el correo electrónico debe ser único. El campo `empleado_id` puede ser nulo, pero, cuando tenga un valor, este debe ser único.
+- **Usuario:** el correo electrónico debe ser único. El campo **empleado_id** puede ser nulo, pero, cuando tenga un valor, este debe ser único.
 - **Sección:** el nombre de cada sección debe ser único.
 - **Configuración:** no puede existir más de una configuración para la misma combinación de sección y horario. El mínimo de empleados no puede ser negativo y el máximo debe ser igual o superior al mínimo.
 - **Ausencia:** la fecha de finalización debe ser igual o posterior a la fecha de inicio.
@@ -190,7 +190,7 @@ Por ejemplo, las ausencias de un empleado se almacenan en registros independient
 
 El modelo cumple la primera forma normal y los atributos de cada tabla dependen de su clave primaria completa.
 
-Todas las entidades utilizan una clave primaria simple (`id`), por lo que no existen dependencias parciales de una clave primaria compuesta.
+Todas las entidades utilizan una clave primaria simple (**id**), por lo que no existen dependencias parciales de una clave primaria compuesta.
 
 Por ejemplo, en Asignación, los campos fecha, horas y estado corresponden a una asignación concreta.
 
@@ -200,7 +200,7 @@ El modelo cumple la segunda forma normal y evita almacenar atributos que dependa
 
 La información se distribuye entre entidades relacionadas mediante claves foráneas.
 
-Por ejemplo, Asignación almacena `seccion_id` en lugar de repetir el nombre de la sección. Del mismo modo, Empleado almacena `seccion_id` para identificar su sección habitual.
+Por ejemplo, Asignación almacena **seccion_id** en lugar de repetir el nombre de la sección. Del mismo modo, Empleado almacena **seccion_id** para identificar su sección habitual.
 
 Esto permite modificar el nombre de una sección una sola vez, sin tener que actualizar todos los empleados o las asignaciones relacionados.
 
