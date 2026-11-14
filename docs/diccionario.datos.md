@@ -96,11 +96,10 @@ Almacena la planificación semanal de los turnos de trabajo.
 |---|---|---|---|---|---|---|
 | id | BIGINT UNSIGNED | NO | PK | AUTO_INCREMENT | Identificador único | Identificador del cuadrante |
 | fecha_inicio | DATE | NO | UNIQUE | — | Lunes de la semana; UNIQUE | Primer día de la semana |
-| fecha_fin | DATE | NO | — | — | Domingo de la misma semana | Último día de la semana |
 | estado | ENUM('borrador','publicado') | NO | — | 'borrador' | Solo admite borrador o publicado | Estado del cuadrante |
 | usuario_id | BIGINT UNSIGNED | NO | FK | — | Referencia Usuario(id) | Usuario que crea el cuadrante |
 
-**Regla de negocio:** el usuario que crea un cuadrante tiene rol **admin**. Laravel comprueba que las fechas corresponden al lunes y domingo de la misma semana.
+**Regla de negocio:** el usuario que crea un cuadrante tiene rol admin. Laravel comprueba que fecha_inicio corresponde a un lunes. La fecha de finalización se obtiene sumando seis días.
 
 ### Asignación
 
