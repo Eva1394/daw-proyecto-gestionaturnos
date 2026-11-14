@@ -23,6 +23,16 @@ Almacena los datos de acceso a la aplicación y el rol de cada usuario. Se manti
 | rol | ENUM('admin', 'empleado') | Determina los permisos del usuario. |
 | empleado_id | BIGINT | Referencia al empleado asociado. Clave foránea (FK), opcional para administradores sin ficha laboral. |
 
+**Restricciones de Usuario:**
+
+- **id:** clave primaria, obligatorio y autoincremental.
+- **nombre:** obligatorio (NOT NULL).
+- **email:** obligatorio y único (NOT NULL, UNIQUE).
+- **password:** obligatorio (NOT NULL). Se almacena mediante un hash seguro.
+- **rol:** obligatorio (NOT NULL). Solo admite los valores 'admin' y 'empleado'.
+- **empleado_id:** opcional (NULL), clave foránea (FK) y único (UNIQUE) cuando tenga un valor.
+
+
 
 ### Empleado
 Almacena los datos laborales de los trabajadores, su disponibilidad y su sección habitual.
@@ -39,6 +49,17 @@ Almacena los datos laborales de los trabajadores, su disponibilidad y su secció
 | tipo_turno | ENUM('fijo', 'rotativo') | Indica si el empleado tiene un turno fijo o rotativo. |
 | activo | BOOLEAN | Indica si el empleado está activo en la plantilla. |
 
+**Restricciones de Empleado:**
+
+- **id:** clave primaria, obligatorio y autoincremental.
+- **nombre:** obligatorio (NOT NULL).
+- **apellidos:** obligatorio (NOT NULL).
+- **seccion_id:** obligatorio (NOT NULL) y clave foránea (FK) que referencia a Sección.
+- **tipo_jornada:** obligatorio (NOT NULL). Solo admite los valores 'completa' y 'parcial'.
+- **tipo_turno:** obligatorio (NOT NULL). Solo admite los valores 'fijo' y 'rotativo'.
+- **activo:** obligatorio (NOT NULL). Por defecto, su valor es verdadero (TRUE).
+
+
 ### Sección
 Almacena las diferentes secciones del supermercado.
 
@@ -50,6 +71,13 @@ Almacena las diferentes secciones del supermercado.
 | nombre | VARCHAR(100) | Nombre de la sección. Debe ser único. |
 | descripcion | VARCHAR(255) | Información adicional sobre la sección. Campo opcional. |
 | activa | BOOLEAN | Indica si la sección está activa. |
+
+**Restricciones de Sección:**
+
+- **id:** clave primaria, obligatorio y autoincremental.
+- **nombre:** obligatorio y único (NOT NULL, UNIQUE).
+- **descripcion:** opcional (NULL).
+- **activa:** obligatorio (NOT NULL). Por defecto, su valor será verdadero (TRUE).
 
 ### Horario
 Almacena los turnos de mañana y tarde.
@@ -65,6 +93,15 @@ Almacena los turnos de mañana y tarde.
 | hora_fin | TIME | Hora a la que finaliza el turno. |
 | activo | BOOLEAN | Indica si el horario está disponible para asignaciones. |
 
+**Restricciones de Horario:**
+
+- **id:** clave primaria, obligatorio y autoincremental.
+- **nombre:** obligatorio (NOT NULL).
+- **hora_inicio:** obligatorio (NOT NULL).
+- **hora_fin:** obligatorio (NOT NULL). Debe ser posterior a hora_inicio.
+- **activo:** obligatorio (NOT NULL). Por defecto, su valor es verdadero (TRUE).
+
+
 ### Configuración
 Almacena el número mínimo y máximo de empleados necesarios en cada sección y turno.
 
@@ -77,6 +114,16 @@ Almacena el número mínimo y máximo de empleados necesarios en cada sección y
 | horario_id | BIGINT | Horario al que corresponde la configuración. Clave foránea (FK) que referencia a Horario. |
 | minimo_empleados | INT | Número mínimo de empleados necesarios en esa sección y horario. |
 | maximo_empleados | INT | Número máximo de empleados que pueden estar asignados simultáneamente. |
+
+**Restricciones de Configuración:**
+
+- **id:** clave primaria, obligatorio y autoincremental.
+- **seccion_id:** obligatorio (NOT NULL) y clave foránea (FK) que referencia a Sección.
+- **horario_id:** obligatorio (NOT NULL) y clave foránea (FK) que referencia a Horario.
+- **minimo_empleados:** obligatorio (NOT NULL). Debe ser mayor o igual que cero.
+- **maximo_empleados:** obligatorio (NOT NULL). Debe ser mayor o igual que minimo_empleados.
+- **Restricción UNIQUE:** la combinación de seccion_id y horario_id debe ser única para evitar configuraciones duplicadas.
+
 
 ### Ausencia
 Almacena las vacaciones y bajas de los empleados.
@@ -92,6 +139,15 @@ Almacena las vacaciones y bajas de los empleados.
 | fecha_fin | DATE | Último día de la ausencia. |
 | observaciones | VARCHAR(255) | Información adicional sobre la ausencia. Campo opcional. |
 
+**Restricciones de Ausencia:**
+
+- **id:** clave primaria, obligatorio y autoincremental.
+- **empleado_id:** obligatorio (NOT NULL) y clave foránea (FK) que referencia a Empleado.
+- **tipo:** obligatorio (NOT NULL). Solo admite los valores 'vacaciones', 'baja' y 'otro'.
+- **fecha_inicio:** obligatorio (NOT NULL).
+- **fecha_fin:** obligatorio (NOT NULL). Debe ser igual o posterior a fecha_inicio.
+- **observaciones:** opcional (NULL).
+
 
 ### Cuadrante
 Almacena la planificación semanal de los turnos de trabajo.
@@ -105,6 +161,15 @@ Almacena la planificación semanal de los turnos de trabajo.
 | fecha_fin | DATE | Último día de la semana a la que corresponde el cuadrante. |
 | estado | ENUM('borrador', 'publicado') | Indica si el cuadrante está pendiente de revisión o disponible para los empleados. |
 | usuario_id | BIGINT | Usuario administrador que crea el cuadrante. Clave foránea (FK) que referencia a Usuario. |
+
+**Restricciones de Cuadrante:**
+
+- **id:** clave primaria, obligatorio y autoincremental.
+- **fecha_inicio:** obligatorio (NOT NULL). Debe corresponder al lunes de la semana.
+- **fecha_fin:** obligatorio (NOT NULL). Debe corresponder al domingo de la misma semana.
+- **estado:** obligatorio (NOT NULL). Solo admite los valores 'borrador' y 'publicado'. Por defecto, es 'borrador'.
+- **usuario_id:** obligatorio (NOT NULL) y clave foránea (FK) que referencia a Usuario.
+- **Restricción UNIQUE:** fecha_inicio debe ser única para evitar crear dos cuadrantes de la misma semana.
 
 
 ### Asignación
@@ -122,6 +187,21 @@ Registra qué empleado trabaja cada día, el turno y la sección a la que está 
 | fecha | DATE | Día concreto de trabajo. |
 | horas | DECIMAL(4,2) | Número de horas de trabajo correspondientes a la asignación. |
 | estado | ENUM('prevista', 'confirmada', 'cancelada') | Estado de la asignación. |
+
+**Restricciones de Asignación:**
+
+- **id:** clave primaria, obligatorio y autoincremental.
+- **cuadrante_id:** obligatorio (NOT NULL) y clave foránea (FK) que referencia a Cuadrante.
+- **empleado_id:** obligatorio (NOT NULL) y clave foránea (FK) que referencia a Empleado.
+- **horario_id:** obligatorio (NOT NULL) y clave foránea (FK) que referencia a Horario.
+- **seccion_id:** obligatorio (NOT NULL) y clave foránea (FK) que referencia a Sección.
+- **fecha:** obligatorio (NOT NULL). Debe pertenecer a la semana del cuadrante asociado.
+- **horas:** obligatorio (NOT NULL). Debe ser mayor que cero y representa las horas previstas para la asignación, incluso si posteriormente se cancela.
+- **estado:** obligatorio (NOT NULL). Solo admite los valores 'prevista', 'confirmada' y 'cancelada'. Por defecto, es 'prevista'.
+- **Restricción UNIQUE:** la combinación de cuadrante_id, empleado_id, fecha y horario_id debe ser única para evitar asignaciones duplicadas.
+- **Solapamiento de horarios:** un empleado no puede tener dos asignaciones activas cuyos horarios se solapen en la misma fecha. Esta comprobación se realiza mediante la lógica de Laravel, sin contar las asignaciones canceladas.
+- **Ausencias:** no se pueden crear ni mantener como activas asignaciones que coincidan con las fechas de una ausencia registrada para el empleado. Esta comprobación corresponde a la lógica de Laravel.
+
 
 
 ## 3. Relaciones entre entidades
