@@ -59,7 +59,6 @@ erDiagram
     CUADRANTE {
         BIGINT id PK
         DATE fecha_inicio
-        DATE fecha_fin
         ENUM estado
         BIGINT usuario_id FK
     }
