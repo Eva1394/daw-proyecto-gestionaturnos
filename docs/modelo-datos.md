@@ -158,7 +158,6 @@ Almacena la planificación semanal de los turnos de trabajo.
 |---|---|---|
 | id | BIGINT | Identificador único del cuadrante. Clave primaria (PK). |
 | fecha_inicio | DATE | Primer día de la semana a la que corresponde el cuadrante. |
-| fecha_fin | DATE | Último día de la semana a la que corresponde el cuadrante. |
 | estado | ENUM('borrador', 'publicado') | Indica si el cuadrante está pendiente de revisión o disponible para los empleados. |
 | usuario_id | BIGINT | Usuario administrador que crea el cuadrante. Clave foránea (FK) que referencia a Usuario. |
 
@@ -166,7 +165,6 @@ Almacena la planificación semanal de los turnos de trabajo.
 
 - **id:** clave primaria, obligatorio y autoincremental.
 - **fecha_inicio:** obligatorio (NOT NULL). Debe corresponder al lunes de la semana.
-- **fecha_fin:** obligatorio (NOT NULL). Debe corresponder al domingo de la misma semana.
 - **estado:** obligatorio (NOT NULL). Solo admite los valores 'borrador' y 'publicado'. Por defecto, es 'borrador'.
 - **usuario_id:** obligatorio (NOT NULL) y clave foránea (FK) que referencia a Usuario.
 - **Restricción UNIQUE:** fecha_inicio debe ser única para evitar crear dos cuadrantes de la misma semana.
@@ -250,7 +248,7 @@ Para garantizar la coherencia de los datos, se establecen las siguientes restric
 - **Sección:** el nombre de cada sección debe ser único.
 - **Configuración:** no puede existir más de una configuración para la misma combinación de sección y horario. El mínimo de empleados no puede ser negativo y el máximo debe ser igual o superior al mínimo.
 - **Ausencia:** la fecha de finalización debe ser igual o posterior a la fecha de inicio.
-- **Cuadrante:** la fecha de finalización debe ser igual o posterior a la fecha de inicio. No pueden existir dos cuadrantes para la misma semana.
+- **Cuadrante:** la fecha de inicio corresponde al lunes de la semana y debe ser única. La fecha de finalización se obtiene sumando seis días.
 - **Asignación:** las horas de trabajo deben ser mayores que cero. No se pueden duplicar asignaciones para el mismo empleado, fecha y horario dentro de un cuadrante.
 
 
