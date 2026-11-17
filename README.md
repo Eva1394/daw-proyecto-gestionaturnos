@@ -2,9 +2,9 @@
 
 GestionaTurnos es una aplicación web destinada a facilitar la organización de los turnos de trabajo en supermercados.
 
-Permitirá gestionar empleados, secciones, turnos y ausencias, además de generar automáticamente cuadrantes semanales que las encargadas podrán revisar y modificar.
+Permite gestionar empleados, secciones, turnos y ausencias, además de generar automáticamente cuadrantes semanales que las encargadas pueden revisar y modificar.
 
-Los empleados también podrán acceder a la aplicación para consultar sus horarios de trabajo.
+Los empleados también pueden acceder a la aplicación para consultar sus horarios de trabajo.
 
 ## Tecnologías previstas
 
