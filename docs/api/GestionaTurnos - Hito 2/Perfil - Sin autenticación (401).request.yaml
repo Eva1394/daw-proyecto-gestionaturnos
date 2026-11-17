@@ -1,0 +1,27 @@
+$kind: http-request
+url: "{{baseUrl}}/api/perfil"
+method: GET
+headers:
+  Accept: application/json
+scripts:
+  - type: afterResponse
+    code: "\r
+
+      pm.test(\"Acceso sin token - 401 Unauthorized\", function () {\r
+
+      \    pm.response.to.have.status(401);\r
+
+      });\r
+
+      \r
+
+      pm.test(\"El servidor rechaza el acceso sin autenticación\", function ()
+      {\r
+
+      \    const respuesta = pm.response.json();\r
+
+      \    pm.expect(respuesta.message).to.eql(\"Unauthenticated.\");\r
+
+      });\r\n"
+    language: text/javascript
+order: 4000

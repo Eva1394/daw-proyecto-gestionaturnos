@@ -20,3 +20,16 @@ El anteproyecto del Hito 1 se encuentra en el archivo [Anteproyecto.md](Anteproy
 ## Estado del proyecto
 
 Hito 1: definición funcional, alcance del MVP y preparación del entorno de trabajo en GitHub.
+
+## Autora
+
+Eva Rodríguez Pérez
+
+Ciclo Formativo de Grado Superior en Desarrollo de Aplicaciones Web (DAW).
+CIFP Avilés.
+
+## Gestión del proyecto
+
+La planificación y el seguimiento de las tareas se realizan mediante GitHub Projects, utilizando un tablero con cuatro columnas para organizar el trabajo.
+
+Tablero de GitHub Projects: https://github.com/users/Eva1394/projects/1

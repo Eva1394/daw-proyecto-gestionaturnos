@@ -1,0 +1,36 @@
+$kind: http-request
+name: Login - Administrador
+url: "{{baseUrl}}/api/login"
+method: POST
+body:
+  type: json
+  content: "{\r
+
+    \  \"email\": \"user1@cifpaviles.es\",\r
+
+    \  \"password\": \"Gestiona2026!\"\r
+
+    }"
+scripts:
+  - type: afterResponse
+    code: "\r
+
+      pm.test(\"Login empleado - 200 OK\", function () {\r
+
+      \    pm.response.to.have.status(200);\r
+
+      });\r
+
+      \r
+
+      const respuesta = pm.response.json();\r
+
+      \r
+
+      if (pm.response.code === 200 && respuesta.token) {\r
+
+      \    pm.collectionVariables.set(\"tokenEmpleado\", respuesta.token);\r
+
+      }\r\n"
+    language: text/javascript
+order: 1046

@@ -1,0 +1,34 @@
+$kind: http-request
+url: "{{baseUrl}}/api/secciones/999999"
+method: GET
+headers:
+  Accept: application/json
+auth:
+  type: bearer
+  credentials:
+    token: "{{token}}"
+scripts:
+  - type: afterResponse
+    code: "\r
+
+      pm.test(\"Sección inexistente - 404 Not Found\", function () {\r
+
+      \    pm.response.to.have.status(404);\r
+
+      });\r
+
+      \r
+
+      pm.test(\"La API devuelve el error en JSON\", function () {\r
+
+      \    const respuesta = pm.response.json();\r
+
+      \    pm.expect(respuesta.message).to.include(\r
+
+      \        \"No query results for model\"\r
+
+      \    );\r
+
+      });\r\n"
+    language: text/javascript
+order: 7000
