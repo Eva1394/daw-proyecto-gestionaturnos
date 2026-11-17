@@ -24,10 +24,12 @@ Hito 1: definición funcional, alcance del MVP y preparación del entorno de tra
 ## Autora
 
 Eva Rodríguez Pérez
-2º Desarrollo de Aplicaciones Web (DAW) - CIFP Avilés
+
+Ciclo Formativo de Grado Superior en Desarrollo de Aplicaciones Web (DAW).
+CIFP Avilés.
 
 ## Gestión del proyecto
 
-El seguimiento de las tareas se realiza mediante un tablero Kanban de GitHub Projects.
+La planificación y el seguimiento de las tareas se realizan mediante GitHub Projects, utilizando un tablero con cuatro columnas para organizar el trabajo.
 
-[Tablero de GestionaTurnos](https://github.com/users/Eva1394/projects/1)
+Tablero de GitHub Projects: https://github.com/users/Eva1394/projects/1

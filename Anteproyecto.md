@@ -198,6 +198,11 @@ La aplicación generará automáticamente los cuadrantes de la semana teniendo e
 - Si no hay suficientes empleados disponibles para cubrir una sección, el sistema muestra un aviso indicando dónde falta el personal.
 - Si la encargada no está conforme con alguna asignación, podrá modificarla manualmente.
 
+*Criterios para la generación automática:*
+La aplicación utiliza una heurística determinista basada en reglas y prioridades para generar los cuadrantes semanales.
+Primero consulta los empleados disponibles, las ausencias registradas, los turnos correspondientes y las necesidades de personal de cada sección. Después realiza las asignaciones respetando los horarios establecidos y evitando que un mismo empleado esté asignado a dos secciones al mismo tiempo.
+Para decidir entre varios empleados disponibles que cumplen las mismas funciones, se utiliza un orden fijo basado en su identificador. De esta manera, el sistema genera siempre el mismo resultado.
+Si no hay suficientes empleados para cubrir las necesidades de alguna sección, la aplicación muestra un aviso para que la encargada pueda revisar y modificar el cuadrante.
 6. **CU-06: Revisión y modificación de cuadrantes**
 
 Las encargadas podrán revisar los cuadrantes generados por la aplicación para asegurarse de que todas las secciones estén totalmente cubiertas y modificarlos si lo consideran necesario. 
@@ -267,7 +272,7 @@ El MVP estará centrado en conseguir que las encargadas puedan introducir los da
 
 *Cuadrante:* almacena la planificación semanal de los turnos de trabajo
 
-*Asignación:* almacena qué empleado trabaja cada día y en qué sección y en qué horario.  
+*Asignación:* almacena qué empleado trabaja cada día, el turno y la sección a la que está asignado dentro de un cuadrante semanal. También registra las horas de trabajo y el estado de la asignación.  
 
 *Usuario:* almacena los datos de acceso a la aplicación y el rol correspondiente. Estará separado de los datos laborales del empleado.
 

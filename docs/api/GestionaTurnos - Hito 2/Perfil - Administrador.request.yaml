@@ -1,0 +1,28 @@
+$kind: http-request
+url: "{{baseUrl}}/api/perfil"
+method: GET
+auth:
+  type: bearer
+  credentials:
+    token: "{{token}}"
+scripts:
+  - type: afterResponse
+    code: "\r
+
+      pm.test(\"Perfil administrador - 200 OK\", function () {\r
+
+      \    pm.response.to.have.status(200);\r
+
+      });\r
+
+      \r
+
+      pm.test(\"El usuario es administrador\", function () {\r
+
+      \    const usuario = pm.response.json();\r
+
+      \    pm.expect(usuario.rol).to.eql(\"admin\");\r
+
+      });\r\n"
+    language: text/javascript
+order: 3000
