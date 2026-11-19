@@ -1,0 +1,19 @@
+# Use this workspace to collaborate
+workspace:
+  id: 89be5202-e9fd-4b16-84b0-ddc0c5b0aab8
+
+localResources:
+  specs:
+    - ../postman/specs/GestionaTurnos API/GestionaTurnos API.json
+resourceNameMappings:
+  specs:
+    - ../postman/specs/GestionaTurnos API/GestionaTurnos API.json: GestionaTurnos API
+
+# Each entry here maps a local resource to one or more corresponding objects in Postman Cloud
+cloudResources:
+  collections:
+    ../postman/collections/GestionaTurnos - Hito 2: 60213371-db3188a3-e454-4135-b08c-9f3337068409
+  specs:
+    ../postman/specs/GestionaTurnos API/GestionaTurnos API.json: 53467209-9dc7-4fa8-a41a-023135e51bb1
+  globals:
+    ../postman/globals/workspace.globals.yaml: b0331fb6-0ed6-4942-8fc0-2e2bbd2bd8cf

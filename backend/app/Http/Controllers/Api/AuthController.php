@@ -31,15 +31,20 @@ class AuthController extends Controller
 
         // Comprobar el correo y la contraseña
         if (!Auth::attempt([
-            'email' => $datos['email'],
+            'email' => $email,
             'password' => $datos['password'],
         ])) {
             RateLimiter::hit($clave, 60);
 
-            throw ValidationException::withMessages([
-                'email' => 'Las credenciales introducidas no son correctas.',
-            ]);
+            return response()->json([
+                'type'     => 'about:blank',
+                'title'    => 'No autenticado',
+                'status'   => 401,
+                'detail'   => 'Las credenciales introducidas no son correctas.',
+                'instance' => $request->getPathInfo(),
+            ], 401);
         }
+
 
         RateLimiter::clear($clave);
 
@@ -54,21 +59,33 @@ class AuthController extends Controller
 
         return response()->json([
             'mensaje' => 'Inicio de sesión correcto.',
-            'usuario' => $usuario,
+            'usuario' => [
+                'id'     => $usuario->id,
+                'nombre' => $usuario->nombre,
+                'email'  => $usuario->email,
+                'rol'    => $usuario->rol,
+            ],
             'token' => $token,
             'tipo_token' => 'Bearer',
             'expira_en' => 7200,
         ], 200);
+
     }
 
     // Consultar el usuario autenticado
     public function perfil(Request $request)
     {
-        return response()->json(
-            $request->user()->load('empleado'),
-            200
-        );
+        $usuario = $request->user()->load('empleado');
+
+        return response()->json([
+            'id'       => $usuario->id,
+            'nombre'   => $usuario->nombre,
+            'email'    => $usuario->email,
+            'rol'      => $usuario->rol,
+            'empleado' => $usuario->empleado,
+        ], 200);
     }
+
 
     // Cerrar sesión
     public function logout(Request $request)

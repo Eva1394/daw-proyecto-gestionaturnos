@@ -119,13 +119,18 @@ class GestionaTurnosSeeder extends Seeder
                 ->where('email', $usuario[1])
                 ->first();
 
+            $contrasena = match ($usuario[1]) {
+                'admin@cifpaviles.es' => 'Admin1234!',
+                'user1@cifpaviles.es',
+                'user2@cifpaviles.es' => 'User1234!',
+                default => 'Gestiona2026!',
+            };
+
             DB::table('users')->updateOrInsert(
                 ['email' => $usuario[1]],
                 [
                     'nombre' => $usuario[0],
-                    'password' => $usuarioExistente
-                        ? $usuarioExistente->password
-                        : Hash::make('Gestiona2026!'),
+                    'password' => Hash::make($contrasena),
                     'rol' => $usuario[2],
                     'empleado_id' => $empleadoId,
                     'created_at' => $usuarioExistente

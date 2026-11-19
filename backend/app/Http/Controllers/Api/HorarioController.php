@@ -4,16 +4,25 @@ namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
 use App\Models\Horario;
+use App\Services\HorarioService;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Validation\ValidationException;
 
 class HorarioController extends Controller
 {
+    public function __construct(
+        private HorarioService $horarioService
+    ) {
+    }
+
     // Consultar todos los horarios
     public function index()
     {
-        return response()->json(Horario::all(), 200);
+        return response()->json(
+            $this->horarioService->listar(),
+            200
+        );
     }
 
     // Crear un horario
@@ -21,7 +30,7 @@ class HorarioController extends Controller
     {
         $datos = $this->validarHorario($request);
 
-        $horario = Horario::create($datos);
+        $horario = $this->horarioService->crear($datos);
 
         return response()->json($horario, 201);
     }
@@ -37,7 +46,7 @@ class HorarioController extends Controller
     {
         $datos = $this->validarHorario($request, $horario);
 
-        $horario->update($datos);
+        $horario = $this->horarioService->actualizar($horario, $datos);
 
         return response()->json($horario, 200);
     }
@@ -45,7 +54,7 @@ class HorarioController extends Controller
     // Eliminar un horario
     public function destroy(Horario $horario)
     {
-        $horario->delete();
+        $this->horarioService->eliminar($horario);
 
         return response()->noContent();
     }

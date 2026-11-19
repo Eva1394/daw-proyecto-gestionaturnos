@@ -1,0 +1,120 @@
+{
+  "openapi": "3.0.0",
+  "info": {
+    "title": "GestionaTurnos API",
+    "version": "1.0.0",
+    "description": "Pruebas de la API REST del proyecto GestionaTurnos"
+  },
+  "servers": [
+    {
+      "url": "http://127.0.0.1:8000"
+    }
+  ],
+  "paths": {
+    "/api/login": {
+      "post": {
+        "summary": "Login - Administrador",
+        "responses": {},
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "email": {
+                    "type": "string",
+                    "format": "email"
+                  },
+                  "password": {
+                    "type": "string"
+                  }
+                }
+              },
+              "example": {
+                "email": "admin@cifpaviles.es",
+                "password": "Admin1234!"
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/perfil": {
+      "get": {
+        "summary": "Perfil - Administrador",
+        "responses": {},
+        "security": [
+          {
+            "BearerAuth": []
+          }
+        ]
+      }
+    },
+    "/api/empleados": {
+      "get": {
+        "summary": "Empleados- Acceso denegado (403)",
+        "responses": {},
+        "security": [
+          {
+            "BearerAuth": []
+          }
+        ]
+      }
+    },
+    "/api/secciones": {
+      "post": {
+        "summary": "Secciones - Crear (201)",
+        "responses": {},
+        "security": [
+          {
+            "BearerAuth": []
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "nombre": {
+                    "type": "string"
+                  },
+                  "descripcion": {
+                    "type": "string"
+                  },
+                  "activa": {
+                    "type": "boolean"
+                  }
+                }
+              },
+              "example": {
+                "nombre": "Seccion Prueba Postman 4",
+                "descripcion": "Sección creada para comprobar el código 201",
+                "activa": true
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/secciones/999999": {
+      "get": {
+        "summary": "Secciones- No encontrada (404)",
+        "responses": {},
+        "security": [
+          {
+            "BearerAuth": []
+          }
+        ]
+      }
+    }
+  },
+  "components": {
+    "securitySchemes": {
+      "BearerAuth": {
+        "type": "http",
+        "scheme": "bearer"
+      }
+    }
+  }
+}

@@ -1,0 +1,43 @@
+$kind: http-request
+url: "{{baseUrl}}/api/secciones"
+method: POST
+body:
+  type: json
+  content: "\r
+
+    {\r
+
+    \  \"nombre\": \"Seccion Prueba Postman 4\",\r
+
+    \  \"descripcion\": \"Sección creada para comprobar el código 201\",\r
+
+    \  \"activa\": true\r
+
+    }\r\n"
+auth:
+  type: bearer
+  credentials:
+    token: "{{token}}"
+scripts:
+  - type: afterResponse
+    code: "\r
+
+      pm.test(\"Crear sección - 201 Created\", function () {\r
+
+      \    pm.response.to.have.status(201);\r
+
+      });\r
+
+      \r
+
+      pm.test(\"La sección se ha creado con los datos correctos\", function () {\r
+
+      \    const respuesta = pm.response.json();\r
+
+      \    pm.expect(respuesta.nombre).to.eql(\"Seccion Prueba Postman 4\");\r
+
+      \    pm.expect(respuesta.activa).to.eql(true);\r
+
+      });\r\n"
+    language: text/javascript
+order: 6000
