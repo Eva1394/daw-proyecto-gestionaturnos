@@ -4,17 +4,21 @@ namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
 use App\Models\Cuadrante;
-use Carbon\Carbon;
+use App\Services\CuadranteService;
 use Illuminate\Http\Request;
-use Illuminate\Validation\ValidationException;
 
 class CuadranteController extends Controller
 {
+    public function __construct(
+        private CuadranteService $cuadranteService
+    ) {
+    }
+
     // Consultar todos los cuadrantes
     public function index()
     {
         return response()->json(
-            Cuadrante::with(['usuario', 'asignaciones'])->get(),
+            $this->cuadranteService->listar(),
             200
         );
     }
@@ -24,19 +28,16 @@ class CuadranteController extends Controller
     {
         $datos = $this->validarCuadrante($request);
 
-        $cuadrante = Cuadrante::create($datos);
+        $cuadrante = $this->cuadranteService->crear($datos);
 
-        return response()->json(
-            $cuadrante->load(['usuario', 'asignaciones']),
-            201
-        );
+        return response()->json($cuadrante, 201);
     }
 
     // Consultar un cuadrante por su ID
     public function show(Cuadrante $cuadrante)
     {
         return response()->json(
-            $cuadrante->load(['usuario', 'asignaciones']),
+            $this->cuadranteService->consultar($cuadrante),
             200
         );
     }
@@ -44,32 +45,30 @@ class CuadranteController extends Controller
     // Modificar un cuadrante
     public function update(Request $request, Cuadrante $cuadrante)
     {
-        $datos = $this->validarCuadrante($request, $cuadrante);
+        $datos = $this->validarCuadrante($request, true);
 
-        $cuadrante->update($datos);
-
-        return response()->json(
-            $cuadrante->load(['usuario', 'asignaciones']),
-            200
+        $cuadrante = $this->cuadranteService->actualizar(
+            $cuadrante,
+            $datos
         );
+
+        return response()->json($cuadrante, 200);
     }
 
     // Eliminar un cuadrante
     public function destroy(Cuadrante $cuadrante)
     {
-        $cuadrante->delete();
+        $this->cuadranteService->eliminar($cuadrante);
 
         return response()->noContent();
     }
 
-    // Validar los datos y las reglas del cuadrante
+    // Validar los datos recibidos
     private function validarCuadrante(
         Request $request,
-        ?Cuadrante $cuadrante = null
+        bool $actualizando = false
     ): array {
-        $actualizando = $cuadrante !== null;
-
-        $datos = $request->validate([
+        return $request->validate([
             'fecha_inicio' => [
                 $actualizando ? 'sometimes' : 'required',
                 'required',
@@ -87,38 +86,5 @@ class CuadranteController extends Controller
                 'exists:users,id',
             ],
         ]);
-
-        // Recuperar la fecha nueva o la ya guardada
-        $fechaInicio = $datos['fecha_inicio']
-            ?? $cuadrante?->fecha_inicio?->format('Y-m-d');
-
-        if ($fechaInicio !== null) {
-            $fecha = Carbon::createFromFormat('!Y-m-d', $fechaInicio);
-
-            // Los cuadrantes semanales deben empezar un lunes
-            if (!$fecha->isMonday()) {
-                throw ValidationException::withMessages([
-                    'fecha_inicio' =>
-                        'La fecha de inicio del cuadrante debe ser un lunes.',
-                ]);
-            }
-
-            // No pueden existir dos cuadrantes de la misma semana
-            $consulta = Cuadrante::where('fecha_inicio', $fechaInicio);
-
-            if ($actualizando) {
-                $consulta->where('id', '!=', $cuadrante->id);
-            }
-
-            if ($consulta->exists()) {
-                throw ValidationException::withMessages([
-                    'fecha_inicio' =>
-                        'Ya existe un cuadrante para esta semana.',
-                ]);
-            }
-        }
-
-        return $datos;
     }
 }
-

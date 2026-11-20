@@ -1,0 +1,28 @@
+$kind: http-request
+url: "{{baseUrl}}/api/empleados"
+method: GET
+auth:
+  type: bearer
+  credentials:
+    token: "{{tokenEmpleado}}"
+scripts:
+  - type: afterResponse
+    code: "\r
+
+      pm.test(\"Empleado sin permisos - 403 Forbidden\", function () {\r
+
+      \    pm.response.to.have.status(403);\r
+
+      });\r
+
+      \r
+
+      pm.test(\"El servidor rechaza el acceso del empleado\", function () {\r
+
+      \    const respuesta = pm.response.json();\r
+
+      \    pm.expect(respuesta.detail).to.eql(\"No tienes permisos para realizar esta operación.\")\r
+
+      });\r\n"
+    language: text/javascript
+order: 5000

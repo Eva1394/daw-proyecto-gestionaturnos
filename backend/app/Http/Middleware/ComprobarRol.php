@@ -21,16 +21,25 @@ class ComprobarRol
 
         if (!$usuario) {
             return response()->json([
-                'mensaje' => 'No autenticado.',
+                'type'     => url('/errors/no-autenticado'),
+                'title'    => 'No autenticado',
+                'status'   => 401,
+                'detail'   => 'Se requiere un token válido para acceder a este recurso.',
+                'instance' => $request->path(),
             ], 401);
         }
 
         // Comprobar si el rol está autorizado
         if (!in_array($usuario->rol, $roles, true)) {
             return response()->json([
-                'mensaje' => 'No tienes permisos para realizar esta operación.',
+                'type'     => url('/errors/sin-permisos'),
+                'title'    => 'Acceso denegado',
+                'status'   => 403,
+                'detail'   => 'No tienes permisos para realizar esta operación.',
+                'instance' => $request->path(),
             ], 403);
         }
+
 
         // Permitir continuar con la petición
         return $next($request);

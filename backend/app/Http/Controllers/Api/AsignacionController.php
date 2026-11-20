@@ -4,23 +4,21 @@ namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
 use App\Models\Asignacion;
-use App\Models\Cuadrante;
-use Carbon\Carbon;
+use App\Services\AsignacionService;
 use Illuminate\Http\Request;
-use Illuminate\Validation\ValidationException;
 
 class AsignacionController extends Controller
 {
+    public function __construct(
+        private AsignacionService $asignacionService
+    ) {
+    }
+
     // Consultar todas las asignaciones
     public function index()
     {
         return response()->json(
-            Asignacion::with([
-                'cuadrante',
-                'empleado',
-                'horario',
-                'seccion'
-            ])->get(),
+            $this->asignacionService->listar(),
             200
         );
     }
@@ -37,17 +35,9 @@ class AsignacionController extends Controller
             ], 403);
         }
 
-        $asignaciones = Asignacion::with([
-            'cuadrante',
-            'horario',
-            'seccion'
-        ])
-            ->where('empleado_id', $usuario->empleado_id)
-            ->whereHas('cuadrante', function ($consulta) {
-                $consulta->where('estado', 'publicado');
-            })
-            ->orderBy('fecha')
-            ->get();
+        $asignaciones = $this->asignacionService->misAsignaciones(
+            $usuario->empleado_id
+        );
 
         return response()->json($asignaciones, 200);
     }
@@ -57,29 +47,16 @@ class AsignacionController extends Controller
     {
         $datos = $this->validarAsignacion($request);
 
-        $asignacion = Asignacion::create($datos);
+        $asignacion = $this->asignacionService->crear($datos);
 
-        return response()->json(
-            $asignacion->load([
-                'cuadrante',
-                'empleado',
-                'horario',
-                'seccion'
-            ]),
-            201
-        );
+        return response()->json($asignacion, 201);
     }
 
     // Consultar una asignación por su ID
     public function show(Asignacion $asignacion)
     {
         return response()->json(
-            $asignacion->load([
-                'cuadrante',
-                'empleado',
-                'horario',
-                'seccion'
-            ]),
+            $this->asignacionService->consultar($asignacion),
             200
         );
     }
@@ -87,37 +64,30 @@ class AsignacionController extends Controller
     // Modificar una asignación
     public function update(Request $request, Asignacion $asignacion)
     {
-        $datos = $this->validarAsignacion($request, $asignacion);
+        $datos = $this->validarAsignacion($request, true);
 
-        $asignacion->update($datos);
-
-        return response()->json(
-            $asignacion->load([
-                'cuadrante',
-                'empleado',
-                'horario',
-                'seccion'
-            ]),
-            200
+        $asignacion = $this->asignacionService->actualizar(
+            $asignacion,
+            $datos
         );
+
+        return response()->json($asignacion, 200);
     }
 
     // Eliminar una asignación
     public function destroy(Asignacion $asignacion)
     {
-        $asignacion->delete();
+        $this->asignacionService->eliminar($asignacion);
 
         return response()->noContent();
     }
 
-    // Validar los datos y las reglas de negocio
+    // Validar los datos recibidos
     private function validarAsignacion(
         Request $request,
-        ?Asignacion $asignacion = null
+        bool $actualizando = false
     ): array {
-        $actualizando = $asignacion !== null;
-
-        $datos = $request->validate([
+        return $request->validate([
             'cuadrante_id' => [
                 $actualizando ? 'sometimes' : 'required',
                 'required',
@@ -161,64 +131,5 @@ class AsignacionController extends Controller
                 'in:prevista,confirmada,cancelada',
             ],
         ]);
-
-        // Usar los valores nuevos o los existentes
-        $cuadranteId = $datos['cuadrante_id']
-            ?? $asignacion?->cuadrante_id;
-
-        $empleadoId = $datos['empleado_id']
-            ?? $asignacion?->empleado_id;
-
-        $horarioId = $datos['horario_id']
-            ?? $asignacion?->horario_id;
-
-        $fecha = $datos['fecha']
-            ?? $asignacion?->fecha?->format('Y-m-d');
-
-        // Comprobar que la fecha pertenece a la semana
-        if ($cuadranteId !== null && $fecha !== null) {
-            $cuadrante = Cuadrante::findOrFail($cuadranteId);
-
-            $inicio = $cuadrante->fecha_inicio->copy()->startOfDay();
-            $fin = $inicio->copy()->addDays(6);
-            $fechaAsignacion = Carbon::createFromFormat('!Y-m-d', $fecha);
-
-            if (
-                $fechaAsignacion->lt($inicio) ||
-                $fechaAsignacion->gt($fin)
-            ) {
-                throw ValidationException::withMessages([
-                    'fecha' =>
-                        'La fecha debe pertenecer a la semana del cuadrante.',
-                ]);
-            }
-        }
-
-        // Evitar asignaciones duplicadas
-        if (
-            $cuadranteId !== null &&
-            $empleadoId !== null &&
-            $horarioId !== null &&
-            $fecha !== null
-        ) {
-            $consulta = Asignacion::where('cuadrante_id', $cuadranteId)
-                ->where('empleado_id', $empleadoId)
-                ->where('horario_id', $horarioId)
-                ->whereDate('fecha', $fecha);
-
-            if ($actualizando) {
-                $consulta->where('id', '!=', $asignacion->id);
-            }
-
-            if ($consulta->exists()) {
-                throw ValidationException::withMessages([
-                    'empleado_id' =>
-                        'Ya existe una asignación para este empleado, fecha y horario en el cuadrante.',
-                ]);
-            }
-        }
-
-        return $datos;
     }
 }
-

@@ -1,0 +1,53 @@
+$kind: http-request
+url: "{{baseUrl}}/api/secciones"
+method: POST
+headers:
+  Accept: application/json
+body:
+  type: json
+  content: "{\r
+
+    \  \"descripcion\": \"Prueba de validación sin nombre\",\r
+
+    \  \"activa\": true\r
+
+    }"
+auth:
+  type: bearer
+  credentials:
+    token: "{{token}}"
+scripts:
+  - type: afterResponse
+    code: "pm.test(\"Datos inválidos - 422 Unprocessable Content\", function () {\r
+
+      \    pm.response.to.have.status(422);\r
+
+      });\r
+
+      \r
+
+      pm.test(\"La API identifica el campo obligatorio\", function () {\r
+
+      \    const respuesta = pm.response.json();\r
+
+      \r
+
+      \    pm.expect(respuesta.errors).to.be.an(\"array\");\r
+
+      \r
+
+      \    const errorNombre = respuesta.errors.find(\r
+
+      \        error => error.field === \"nombre\"\r
+
+      \    );\r
+
+      \r
+
+      \    pm.expect(errorNombre).to.exist;\r
+
+      \    pm.expect(errorNombre.message).to.be.a(\"string\");\r
+
+      });\r\n"
+    language: text/javascript
+order: 8000

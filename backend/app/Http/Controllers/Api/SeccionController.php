@@ -4,15 +4,21 @@ namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
 use App\Models\Seccion;
+use App\Services\SeccionService;
 use Illuminate\Http\Request;
 use Illuminate\Validation\Rule;
 
 class SeccionController extends Controller
 {
+    public function __construct(
+        private SeccionService $seccionService
+    ) {
+    }
+
     // Consultar todas las secciones
     public function index()
     {
-        return response()->json(Seccion::all(), 200);
+        return response()->json($this->seccionService->listar(), 200);
     }
 
     // Crear una sección
@@ -24,7 +30,7 @@ class SeccionController extends Controller
             'activa' => 'sometimes|boolean',
         ]);
 
-        $seccion = Seccion::create($datos);
+        $seccion = $this->seccionService->crear($datos);
 
         return response()->json($seccion, 201);
     }
@@ -50,7 +56,7 @@ class SeccionController extends Controller
             'activa' => 'sometimes|boolean',
         ]);
 
-        $seccion->update($datos);
+        $seccion = $this->seccionService->actualizar($seccion, $datos);
 
         return response()->json($seccion, 200);
     }
@@ -58,7 +64,7 @@ class SeccionController extends Controller
     // Eliminar una sección
     public function destroy(Seccion $seccion)
     {
-        $seccion->delete();
+        $this->seccionService->eliminar($seccion);
 
         return response()->noContent();
     }
