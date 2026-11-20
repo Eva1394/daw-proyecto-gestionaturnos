@@ -4,16 +4,22 @@ namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
 use App\Models\Empleado;
+use App\Services\EmpleadoService;
 use Illuminate\Http\Request;
 use Illuminate\Validation\Rule;
 
 class EmpleadoController extends Controller
 {
+    public function __construct(
+        private EmpleadoService $empleadoService
+    ) {
+    }
+
     // Consultar todos los empleados y sus secciones
     public function index()
     {
         return response()->json(
-            Empleado::with('seccion')->get(),
+            $this->empleadoService->listar(),
             200
         );
     }
@@ -30,19 +36,16 @@ class EmpleadoController extends Controller
             'activo' => 'sometimes|boolean',
         ]);
 
-        $empleado = Empleado::create($datos);
+        $empleado = $this->empleadoService->crear($datos);
 
-        return response()->json(
-            $empleado->load('seccion'),
-            201
-        );
+        return response()->json($empleado, 201);
     }
 
     // Consultar un empleado por su ID
     public function show(Empleado $empleado)
     {
         return response()->json(
-            $empleado->load('seccion'),
+            $this->empleadoService->consultar($empleado),
             200
         );
     }
@@ -59,18 +62,15 @@ class EmpleadoController extends Controller
             'activo' => 'sometimes|boolean',
         ]);
 
-        $empleado->update($datos);
+        $empleado = $this->empleadoService->actualizar($empleado, $datos);
 
-        return response()->json(
-            $empleado->load('seccion'),
-            200
-        );
+        return response()->json($empleado, 200);
     }
 
     // Eliminar un empleado
     public function destroy(Empleado $empleado)
     {
-        $empleado->delete();
+        $this->empleadoService->eliminar($empleado);
 
         return response()->noContent();
     }

@@ -1,0 +1,363 @@
+{
+  "info": {
+    "_postman_id": "db3188a3-e454-4135-b08c-9f3337068409",
+    "name": "GestionaTurnos - Hito 2",
+    "description": "Pruebas de la API REST del proyecto GestionaTurnos",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+    "_exporter_id": "60213371",
+    "_collection_link": "https://go.postman.co/collection/60213371-db3188a3-e454-4135-b08c-9f3337068409?source=collection_link"
+  },
+  "item": [
+    {
+      "name": "Login - Administrador",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "\r\npm.test(\"Login administrador - 200 OK\", function () {\r\n    pm.response.to.have.status(200);\r\n});\r\n\r\nconst respuesta = pm.response.json();\r\n\r\nif (pm.response.code === 200 && respuesta.token) {\r\n    pm.collectionVariables.set(\"token\", respuesta.token);\r\n}\r\n"
+            ]
+          }
+        }
+      ],
+      "request": {
+        "method": "POST",
+        "header": [],
+        "body": {
+          "mode": "raw",
+          "raw": "{\r\n  \"email\": \"admin@cifpaviles.es\",\r\n  \"password\": \"Admin1234!\"\r\n}",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        },
+        "url": {
+          "raw": "{{baseUrl}}/api/login",
+          "host": [
+            "{{baseUrl}}"
+          ],
+          "path": [
+            "api",
+            "login"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "Login-Empleado",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "pm.test(\"Login empleado - 200 OK\", function () {\r\n    pm.response.to.have.status(200);\r\n});\r\n\r\nconst respuesta = pm.response.json();\r\n\r\nif (pm.response.code === 200 && respuesta.token) {\r\n    pm.collectionVariables.set(\"tokenEmpleado\", respuesta.token);\r\n}\r\n"
+            ]
+          }
+        }
+      ],
+      "request": {
+        "method": "POST",
+        "header": [],
+        "body": {
+          "mode": "raw",
+          "raw": "{\r\n  \"email\": \"user1@cifpaviles.es\",\r\n  \"password\": \"User1234!\"\r\n}",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        },
+        "url": {
+          "raw": "{{baseUrl}}/api/login",
+          "host": [
+            "{{baseUrl}}"
+          ],
+          "path": [
+            "api",
+            "login"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "Perfil - Administrador",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "\r\npm.test(\"Perfil administrador - 200 OK\", function () {\r\n    pm.response.to.have.status(200);\r\n});\r\n\r\npm.test(\"El usuario es administrador\", function () {\r\n    const usuario = pm.response.json();\r\n    pm.expect(usuario.rol).to.eql(\"admin\");\r\n});\r\n"
+            ]
+          }
+        }
+      ],
+      "request": {
+        "auth": {
+          "type": "bearer",
+          "bearer": [
+            {
+              "key": "token",
+              "value": "{{token}}",
+              "type": "string"
+            }
+          ]
+        },
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "{{baseUrl}}/api/perfil",
+          "host": [
+            "{{baseUrl}}"
+          ],
+          "path": [
+            "api",
+            "perfil"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "Perfil - Sin autenticación (401)",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "\r\npm.test(\"Acceso sin token - 401 Unauthorized\", function () {\r\n    pm.response.to.have.status(401);\r\n});\r\n\r\npm.test(\"El servidor rechaza el acceso sin autenticación\", function () {\r\n    const respuesta = pm.response.json();\r\n   pm.expect(respuesta.detail).to.eql(\"Debes iniciar sesión para acceder a este recurso.\");\r\n});\r\n"
+            ]
+          }
+        }
+      ],
+      "request": {
+        "method": "GET",
+        "header": [
+          {
+            "key": "Accept",
+            "value": "application/json"
+          }
+        ],
+        "url": {
+          "raw": "{{baseUrl}}/api/perfil",
+          "host": [
+            "{{baseUrl}}"
+          ],
+          "path": [
+            "api",
+            "perfil"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "Empleados- Acceso denegado (403)",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "\r\npm.test(\"Empleado sin permisos - 403 Forbidden\", function () {\r\n    pm.response.to.have.status(403);\r\n});\r\n\r\npm.test(\"El servidor rechaza el acceso del empleado\", function () {\r\n    const respuesta = pm.response.json();\r\n    pm.expect(respuesta.detail).to.eql(\"No tienes permisos para realizar esta operación.\")\r\n});\r\n"
+            ]
+          }
+        }
+      ],
+      "request": {
+        "auth": {
+          "type": "bearer",
+          "bearer": [
+            {
+              "key": "token",
+              "value": "{{tokenEmpleado}}",
+              "type": "string"
+            }
+          ]
+        },
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "{{baseUrl}}/api/empleados",
+          "host": [
+            "{{baseUrl}}"
+          ],
+          "path": [
+            "api",
+            "empleados"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "Secciones - Crear (201)",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "\r\npm.test(\"Crear sección - 201 Created\", function () {\r\n    pm.response.to.have.status(201);\r\n});\r\n\r\npm.test(\"La sección se ha creado con los datos correctos\", function () {\r\n    const respuesta = pm.response.json();\r\n    pm.expect(respuesta.nombre).to.eql(\"Seccion Prueba Postman 4\");\r\n    pm.expect(respuesta.activa).to.eql(true);\r\n});\r\n"
+            ]
+          }
+        }
+      ],
+      "request": {
+        "auth": {
+          "type": "bearer",
+          "bearer": [
+            {
+              "key": "token",
+              "value": "{{token}}",
+              "type": "string"
+            }
+          ]
+        },
+        "method": "POST",
+        "header": [],
+        "body": {
+          "mode": "raw",
+          "raw": "\r\n{\r\n  \"nombre\": \"Seccion Prueba Postman 4\",\r\n  \"descripcion\": \"Sección creada para comprobar el código 201\",\r\n  \"activa\": true\r\n}\r\n",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        },
+        "url": {
+          "raw": "{{baseUrl}}/api/secciones",
+          "host": [
+            "{{baseUrl}}"
+          ],
+          "path": [
+            "api",
+            "secciones"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "Secciones- No encontrada (404)",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "pm.test(\"Sección inexistente - 404 Not Found\", function () {\r\n    pm.response.to.have.status(404);\r\n});\r\n\r\npm.test(\"La API devuelve el error en formato RFC 9457\", function () {\r\n    const respuesta = pm.response.json();\r\n\r\n    pm.expect(respuesta.status).to.eql(404);\r\n    pm.expect(respuesta.detail).to.be.a(\"string\");\r\n    pm.expect(respuesta.type).to.eql(\"about:blank\");\r\n});"
+            ]
+          }
+        }
+      ],
+      "request": {
+        "auth": {
+          "type": "bearer",
+          "bearer": [
+            {
+              "key": "token",
+              "value": "{{token}}",
+              "type": "string"
+            }
+          ]
+        },
+        "method": "GET",
+        "header": [
+          {
+            "key": "Accept",
+            "value": "application/json"
+          }
+        ],
+        "url": {
+          "raw": "{{baseUrl}}/api/secciones/999999",
+          "host": [
+            "{{baseUrl}}"
+          ],
+          "path": [
+            "api",
+            "secciones",
+            "999999"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "Secciones - Validación incorrecta (422)",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "pm.test(\"Datos inválidos - 422 Unprocessable Content\", function () {\r\n    pm.response.to.have.status(422);\r\n});\r\n\r\npm.test(\"La API identifica el campo obligatorio\", function () {\r\n    const respuesta = pm.response.json();\r\n\r\n    pm.expect(respuesta.errors).to.be.an(\"array\");\r\n\r\n    const errorNombre = respuesta.errors.find(\r\n        error => error.field === \"nombre\"\r\n    );\r\n\r\n    pm.expect(errorNombre).to.exist;\r\n    pm.expect(errorNombre.message).to.be.a(\"string\");\r\n});\r\n"
+            ]
+          }
+        }
+      ],
+      "request": {
+        "auth": {
+          "type": "bearer",
+          "bearer": [
+            {
+              "key": "token",
+              "value": "{{token}}",
+              "type": "string"
+            }
+          ]
+        },
+        "method": "POST",
+        "header": [
+          {
+            "key": "Accept",
+            "value": "application/json"
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\r\n  \"descripcion\": \"Prueba de validación sin nombre\",\r\n  \"activa\": true\r\n}",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        },
+        "url": {
+          "raw": "{{baseUrl}}/api/secciones",
+          "host": [
+            "{{baseUrl}}"
+          ],
+          "path": [
+            "api",
+            "secciones"
+          ]
+        }
+      },
+      "response": []
+    }
+  ],
+  "variable": [
+    {
+      "key": "baseUrl",
+      "value": "http://127.0.0.1:8000",
+      "type": "string"
+    },
+    {
+      "key": "token",
+      "value": "",
+      "type": "string"
+    },
+    {
+      "key": "tokenEmpleado",
+      "value": "",
+      "type": "string"
+    }
+  ]
+}
